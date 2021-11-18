@@ -1,57 +1,69 @@
-import { useFormik } from "formik"
-import * as Yup from 'yup'
+import { useContext } from "react";
+import { useFormik } from "formik";
+import { UserContext } from "../context/UserContext";
+import * as Yup from "yup";
 
+import Button from "../components/Button"
 
- 
 const Login = () => {
-    const formik = useFormik({
-        initialValues: {
-          username: "",
-          password: ""
-        },
-        onSubmit: values => {
-          console.log("valeur apres le submit",values)
-        },
-        // utilisation de yup pour mettre des condition a nos formulaire 
-        validationSchema: Yup.object().shape({
-          username: Yup.string()
-            .max(15, "Username est trop long")
-            .required("Username est requis"),
-          password: Yup.string()
-            .min(6, "password trop court")
-            .required("password trop long")
-        }),
-        validateOnChange: false
-      })
+  const {isLogged, setIsLogged} = useContext(UserContext)
 
-      console.log(formik.initialValues);
+  const formik = useFormik({
+    initialValues: {
+      username: "",
+      password: "",
+    },
+    onSubmit: (value) => {
+      console.log(value)
+      setIsLogged(true)
+    },
+    validationSchema: Yup.object().shape({
+      username: Yup.string()
+        .required("You have to put your username")
+        .max(15, "It's too long!"),
+      password: Yup.string()
+        .required("You have to put your password")
+        .min(6, "It's too short!"),
+    }),
+  });
 
-    return (
-        <form  onSubmit={formik.handleSubmit}>
+  console.log(isLogged)
+
+  return (
+    <>
+      <div className="view">
+        <div className="flex container-form">
+          <h1>Login</h1>
+          <form
+            onClick={formik.handleSubmit}
+            className="flex container-form form"
+          >
             <input
-                type="text"
-                name="username"
-                placeholder="enter username"
-                value={formik.values.username}
-                // function de fornik qui permet de changer les valeur de mon state 
-                onChange={formik.handleChange}
-      />
-                {formik.errors.username && <p>{formik.errors.username}</p>}
-        <br />
-        
-        <input
-            type="password"
-            name="password"
-            placeholder="enter password"
-            value={formik.values.password}
-            // function de fornik qui permet de changer les valeur de mon state 
-            onChange={formik.handleChange}
-      />
-            {formik.errors.password && <p>{formik.errors.password}</p>}
-        <br />
-        <button type="submit">Submit</button>
-    </form>
-    );
-  }
-  
-  export default Login
+              onChange={formik.handleChange}
+              value={formik.values.username}
+              name="username"
+              type="text"
+              placeholder="Enter your username"
+            />
+            <label>{formik.errors.username}</label>
+            <input
+              onChange={formik.handleChange}
+              value={formik.values.password}
+              name="password"
+              type="password"
+              placeholder="Enter your password"
+            />
+            <label>{formik.errors.password}</label>
+            { !isLogged ?
+              <Button type="submit">Login</Button>
+              :
+              <Button type="button" handleClick={() => setIsLogged(false)}>Logout</Button>
+            }
+          </form>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Login;

@@ -1,11 +1,12 @@
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom"
+
 const Nav = () => {
-    return (
-        <nav className="nav">
-            <Link className="nav-link " aria-current="page" to="/">Home</Link>
-            <Link className="nav-link" to="/login">Login</Link>  
-        </nav>
-    );
-  }
-  
-  export default Nav
+  return (
+    <nav className="nav flex">
+      <p><Link to="/" className="links">Home</Link></p>
+      <p><Link to="/Login" className="links">Login</Link></p>
+    </nav>
+  )
+}
+
+export default Nav

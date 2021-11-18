@@ -1,17 +1,29 @@
-const Button = () => {
-    const clickRandom = () => {
-        let min = 1;
-        let max = 151;
-        
-        let result = Math.floor(Math.random() * (max - min + 1) + min)
-        console.log(result);
-        return result
-    }
-    return (
-        <div>
-            <button onClick={clickRandom} type="button" class="btn btn-success">Change pokemon</button>
-        </div>
-    );
-  }
-  
-  export default Button
+const Button = props => {
+  return (
+    <>
+      {/* {props.type === "submit" ? 
+        <button 
+          type={props.type}
+          onClick={props.handleClick}
+        >
+          {props.children}
+        </button>
+        :
+        <button 
+          type={props.type}
+        >
+          {props.children}
+        </button>
+
+      } */}
+      <button 
+        type={props.type}
+        onClick={props.handleClick}
+      >
+        {props.children}
+      </button>
+    </>
+  )
+}
+
+export default Button

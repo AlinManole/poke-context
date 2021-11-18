@@ -1,51 +1,93 @@
-import { useState, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom"
+import { UserContext } from "../context/UserContext";
+
+import Button from "../components/Button";
 
 const Home = () => {
-    const [ pokemon , setPokemon] = useState(null)
-    // ce useeffect correspond au componentsDidmount grace au array vide a la fin executer a la fin du return (render)
-    useEffect(() => {
-        fetch( `https://pokeapi.co/api/v2/pokemon/${1}`)
-            .then(reponse => reponse.json())
-            .then(result => setPokemon(result))
-    }, []);
-    const clickRandom = () => {
-        let min = 1;
-        let max = 151;
-        
-        let result = Math.floor(Math.random() * (max - min + 1) + min)
-        fetch( `https://pokeapi.co/api/v2/pokemon/${result}`)
-            .then(reponse => reponse.json())
-            .then(result => setPokemon(result))
-    }
+  const [pokemon, setPokemon] = useState(null);
+  const [id, setId] = useState(1);
+  const {isLogged} = useContext(UserContext)
 
-    // console.log("state pokemon",pokemon);
-    return (
-        <>
-            <p>Home</p>
-            {pokemon == null ? (
-                <></>
-            ) : (
-               <div className="card col-6 bg-secondary" >
-                    <img className="card-img-top img-fluid" src={`${pokemon.sprites.other.dream_world.front_default} `} />
-                    <div className="card-body">
-                        <p> <span className="fw-bold "> nom :</span> {pokemon.name} </p>
-                        <p> <span className="fw-bold">hauteur : </span> {pokemon.height} cm </p>
-                        <p> <span className="fw-bold">Poid: </span> {pokemon.weight} kg </p>
-                   
-                        {pokemon.types.map((type, index) =>
-                            (<div key={type.type.name}>
-                                <p> <span className="fw-bold">le type :  </span> {type.type.name} </p>
-                            </div>)
-                        )}
-                        <button onClick={clickRandom} type="button" class="btn btn-success">Change pokemon</button>
-                    </div>
-               </div>    
-                
-            )}
-             
-              
-        </>
-    );
+  function handleClick() {
+    const min = 1;
+    const max = 151;
+
+    let randomId = Math.floor(Math.random() * (max - min + 1) - min);
+    setId(randomId);
   }
-  
-  export default Home
+
+  useEffect(() => {
+    fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
+      .then((res) => res.json())
+      .then((res) => setPokemon(res));
+  }, [id]);
+
+  if (!pokemon) {
+    return <h2>There is not a pokémon here!!</h2>;
+  }
+
+  console.log(isLogged)
+
+  return (
+    <>
+      {isLogged === true ?
+        <div>
+          <div className="flex flex-card">
+            <div className="card border">
+              <img
+                src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`}
+                alt={pokemon.name}
+              />
+              <h2>{pokemon.name}</h2>
+              <p>Height: {pokemon.height}</p>
+              <p>Weight: {pokemon.weight}</p>
+              <p>Types: </p>
+              <ul>
+                {pokemon.types.map((type) => (
+                  <li
+                    key={type.type.name}
+                    className={`
+                        ${type.type.name === "normal" && "normal"}
+                        ${type.type.name === "fire" && "fire"}
+                        ${type.type.name === "fighting" && "fighting"}
+                        ${type.type.name === "water" && "water"}
+                        ${type.type.name === "flying" && "flying"}
+                        ${type.type.name === "grass" && "grass"}
+                        ${type.type.name === "poison" && "poison"}
+                        ${type.type.name === "electric" && "electric"}
+                        ${type.type.name === "ground" && "ground"}
+                        ${type.type.name === "psychic" && "psychic"}
+                        ${type.type.name === "rock" && "rock"}
+                        ${type.type.name === "ice" && "ice"}
+                        ${type.type.name === "bug" && "bug"}
+                        ${type.type.name === "dragon" && "dragon"}
+                        ${type.type.name === "ghost" && "ghost"}
+                        ${type.type.name === "dark" && "dark"}
+                        ${type.type.name === "steel" && "steel"}
+                        ${type.type.name === "fairy" && "fairy"}
+                      `}
+                  >
+                    {type.type.name}
+                  </li>
+                ))}
+              </ul>
+              <Button type="button" handleClick={handleClick}>
+                Change to a random Pokémon
+              </Button>
+            </div>
+          </div>
+        </div>
+        :
+        <div className="flex flex-card">
+          <div className="card">
+            <p><Link to="/Login" className="links">Go to Login</Link></p>
+            <p>to be able to see pokemons</p>
+          </div>
+        </div>
+      }
+    </>
+  );
+};
+
+export default Home;

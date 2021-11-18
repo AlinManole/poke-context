@@ -1,25 +1,28 @@
-import { BrowserRouter, Switch, Route } from "react-router-dom";
-import Home from "./Page/Home";
-import Login from "./Page/Login";
-import NotFound from "./Page/NotFound";
-import Nav from "./components/nav";
-import 'bootstrap/dist/css/bootstrap.min.css'
+import { BrowserRouter, Switch, Route } from "react-router-dom"
+import { UserContextProvider } from "./context/UserContext"
+
+import Home from "./pages/Home"
+import Login from "./pages/Login" 
+import Error404 from "./pages/Error404"
+
 import "./App.css"
+import Nav from "./components/Nav"
+
 const App = () => {
   return (
-    <div className="container d-flex justify-content-center" style={{height: "100px !important"}} >
-      <div className="row">
-        <BrowserRouter>
-          <Nav />
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route  path="/login" component={Login} />
-            <Route  path="*" component={NotFound} />
-          </Switch>
-        </BrowserRouter>
-      </div>
-    </div>
-  );
+    <BrowserRouter>
+      <UserContextProvider>
+
+        <Nav />
+
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/Login" component={Login} />
+          <Route path="*" component={Error404} />
+        </Switch>
+      </UserContextProvider>
+    </BrowserRouter>
+  )
 }
 
 export default App
