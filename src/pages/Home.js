@@ -1,31 +1,51 @@
-// import React from 'react';
-import { useState, useEffect , id } from 'react'
+import { useState, useEffect } from "react";
 
 const Home = () => {
-
-
-    const [pokemon, setPokemon] = useState([])
-    // const [id, setId] = useState(1)
-
-
+    const [ pokemon , setPokemon] = useState(null)
+    // ce useeffect correspond au componentsDidmount grace au array vide a la fin executer a la fin du return (render)
     useEffect(() => {
-        fetch("https://pokeapi.co/api/v2/pokemon/1")
-            .then(res => res.json())
-            .then(res => setPokemon(res)
-            )
-    }, [])
-    console.log(pokemon)
+        fetch( `https://pokeapi.co/api/v2/pokemon/${1}`)
+            .then(reponse => reponse.json())
+            .then(result => setPokemon(result))
+    }, []);
+    const clickRandom = () => {
+        let min = 1;
+        let max = 151;
+        
+        let result = Math.floor(Math.random() * (max - min + 1) + min)
+        fetch( `https://pokeapi.co/api/v2/pokemon/${result}`)
+            .then(reponse => reponse.json())
+            .then(result => setPokemon(result))
+    }
+
+    // console.log("state pokemon",pokemon);
     return (
         <>
-            <h1>My Pokemon</h1>
-            {/* <img alt={pokemon.name} src={"pokemon/other/official-artwork/${id}.png"} /> */}
-            <h2>Name : {pokemon.name}</h2>
-            <h2>Height :{pokemon.height}</h2>
-            <h2>Weight : {pokemon.weight}</h2>
-          
-        
+            <p>Home</p>
+            {pokemon == null ? (
+                <></>
+            ) : (
+               <div className="card col-6 bg-secondary" >
+                    <img className="card-img-top img-fluid" src={`${pokemon.sprites.other.dream_world.front_default} `} />
+                    <div className="card-body">
+                        <p> <span className="fw-bold "> nom :</span> {pokemon.name} </p>
+                        <p> <span className="fw-bold">hauteur : </span> {pokemon.height} cm </p>
+                        <p> <span className="fw-bold">Poid: </span> {pokemon.weight} kg </p>
+                   
+                        {pokemon.types.map((type, index) =>
+                            (<div key={type.type.name}>
+                                <p> <span className="fw-bold">le type :  </span> {type.type.name} </p>
+                            </div>)
+                        )}
+                        <button onClick={clickRandom} type="button" class="btn btn-success">Change pokemon</button>
+                    </div>
+               </div>    
+                
+            )}
+             
+              
         </>
     );
-};
-
-export default Home;
+  }
+  
+  export default Home

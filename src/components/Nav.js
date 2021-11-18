@@ -1,17 +1,11 @@
-import React from 'react';
-import { Link } from 'react-router-dom'
-
+import {Link} from 'react-router-dom'
 const Nav = () => {
     return (
-        <>
-            <div>
-                <Link to="/">Home</Link>
-            </div>
-            <div>
-                <Link to="/login">Login</Link>
-            </div>
-        </>
+        <nav className="nav">
+            <Link className="nav-link " aria-current="page" to="/">Home</Link>
+            <Link className="nav-link" to="/login">Login</Link>  
+        </nav>
     );
-};
-
-export default Nav;
+  }
+  
+  export default Nav
